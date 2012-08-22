@@ -13,6 +13,7 @@ class Fb_link_mcp {
 	function index() {
 	
 		// Load necessary helpers and libraries
+		$this->EE->load->library('table');
 		$this->EE->load->helper('form');
 
 		// Set page title

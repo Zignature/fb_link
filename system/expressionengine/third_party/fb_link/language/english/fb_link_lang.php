@@ -10,8 +10,10 @@ $lang = array(
 //----------------------------------------
 
 // Additional Key => Value pairs go here
-'cp_title'		=>	'Facebook Link: Settings',
-'instructions'	=>	'Enter your App ID and App Secret from your Facebook app below.',
+'cp_title'		=>	'Facebook Link',
+'settings'		=>	'Settings',
+'value'			=>	'Value',
+'set_instructions'	=>	'Enter your App ID and App Secret from your Facebook app below.',
 'app_id'	=>	'App ID',
 'app_secret'	=>	'App Secret',
 'app_updated'	=>	'Your app settings were successfully updated.',
