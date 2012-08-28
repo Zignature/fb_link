@@ -26,7 +26,6 @@ class Fb_link {
 			'graph'		=>	$this->EE->TMPL->fetch_param('graph'),
 			'limit'		=>	$this->EE->TMPL->fetch_param('limit'),
 			'fields'	=>	$this->EE->TMPL->fetch_param('fields'),
-			'url'		=> $_GET['url'];
 		);
 		
 		if(empty($params['limit'])) {
@@ -38,14 +37,8 @@ class Fb_link {
 		}
 		
 		// Set the path
-		if(isset($params['url'])) {
-			$path = substr($params['url'], 27);
-			print_r($path)
-			unset($params['url']);			
-		} else {
-			$path = $params['graph'];
-			unset($params['graph']);
-		}
+		$path = $params['graph'];
+		unset($params['graph']);
 		
 		try {
 			// We need to set the index for the parser later
@@ -58,7 +51,10 @@ class Fb_link {
 		// We need to make some "rows" for the EE parser.
 		$rows = $this->make_rows($data);
 		
-		// Work with the tagdata to prepare for paging. First we'll check for the {paging} variable pair and if it exists we'll pull it aside for later.
+		/*
+		//
+		// This may be handy for pagination later but for now it's just filed away.
+		//
 		if (preg_match("/".LD."paging".RD."(.+?)".LD.'\/'."paging".RD."/s", $this->EE->TMPL->tagdata, $page_match)) {
 			// The pattern was found and we set aside the paging tagdata for later and created a copy of all the other tagdata for use
 			$paging = $page_match[1];
@@ -67,6 +63,7 @@ class Fb_link {
 		} else {
 			$tag_data = $this->EE->TMPL->tagdata;
 		}
+		*/
 				
 		// Do some formatting for the data
 		foreach($rows['data'] as $item => $row) {
@@ -92,10 +89,6 @@ class Fb_link {
 			$tagdata = $this->EE->functions->prep_conditionals($tag_data, $cond);
 			$output .= $this->EE->TMPL->parse_variables_row($tagdata, $row);
 			
-		}
-		
-		foreach($rows['paging'] as $item => $row) {
-			$output .= $this->EE->TMPL->parse_variables_row($paging, $row);
 		}
 												
 		return $output;
