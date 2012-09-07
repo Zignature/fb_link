@@ -135,7 +135,7 @@ class Fb_link {
 		return $var;
 	}
 
-	// Now we do the formatting of certain key fields
+	// Function to handle the formatting of certain fields.
 	public function format($k, $v) {		
 		if($k == 'message') {
 			$v = auto_link($this->EE->typography->parse_type($v, array('text_format' => 'lite', 'html_format' => 'safe', 'auto_links' => 'y')));

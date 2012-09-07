@@ -138,14 +138,17 @@ class Base_facebook {
   );
 
   /**
+   * UNUSED CODE!
+   *
    * List of query parameters that get automatically dropped when rebuilding
    * the current URL.
-   */
+   
   protected static $DROP_QUERY_PARAMS = array(
     'code',
     'state',
     'signed_request',
   );
+  */
 
   /**
    * Maps aliases to Facebook domains.
@@ -175,12 +178,12 @@ class Base_facebook {
    *
    * @var integer
    */
-  protected $user;
+  // protected $user;
 
   /**
    * The data from the signed_request token.
    */
-  protected $signedRequest;
+  // protected $signedRequest;
 
   /**
    * The OAuth access token received in exchange for a valid authorization
@@ -323,7 +326,7 @@ class Base_facebook {
    *
    * @param array $params Provide custom parameters
    * @return string The URL for the login flow
-   */
+   *
   public function getLoginUrl($params=array()) {
     $this->establishCSRFTokenState();
     $currentUrl = $this->getCurrentUrl();
@@ -343,7 +346,8 @@ class Base_facebook {
                     'state' => $this->state),
                   $params));
   }
-
+  */
+  
   /**
    * Get a Logout URL suitable for use with redirects.
    *
@@ -352,7 +356,7 @@ class Base_facebook {
    *
    * @param array $params Provide custom parameters
    * @return string The URL for the logout flow
-   */
+   *
   public function getLogoutUrl($params=array()) {
     return $this->getUrl(
       'www',
@@ -363,7 +367,8 @@ class Base_facebook {
       ), $params)
     );
   }
-
+   */
+   
   /**
    * Get a login status URL to fetch the status from Facebook.
    *
@@ -374,7 +379,7 @@ class Base_facebook {
    *
    * @param array $params Provide custom parameters
    * @return string The URL for the logout flow
-   */
+   *
   public function getLoginStatusUrl($params=array()) {
     return $this->getUrl(
       'www',
@@ -388,13 +393,15 @@ class Base_facebook {
       ), $params)
     );
   }
-
+   */
+   
   /**
    * Returns the access token that should be used for logged out
    * users when no authorization code is available.
    *
    * @return string The application access token, useful for gathering
    *                public information about users and applications.
+   *
    */
   protected function getApplicationAccessToken() {
     return $this->appToken;
@@ -580,7 +587,7 @@ class Base_facebook {
    * not persist.
    *
    * @return string The current URL
-   */
+   *
   protected function getCurrentUrl() {
     if (isset($_SERVER['HTTPS']) &&
         ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
@@ -623,6 +630,7 @@ class Base_facebook {
     // rebuild
     return $protocol . $parts['host'] . $port . $parts['path'] . $query;
   }
+   */
 
   /**
    * Analyzes the supplied result to see if it was thrown
