@@ -18,7 +18,7 @@
  * Modifications and customizations:
  * @author - Ron Hickson
  * @website - http://www.hicksondesign.com
- * @date - 2012-08-25
+ * @date - 2012-09-25
  */
 
 if (!function_exists('curl_init')) {
@@ -138,19 +138,6 @@ class Base_facebook {
   );
 
   /**
-   * UNUSED CODE!
-   *
-   * List of query parameters that get automatically dropped when rebuilding
-   * the current URL.
-   
-  protected static $DROP_QUERY_PARAMS = array(
-    'code',
-    'state',
-    'signed_request',
-  );
-  */
-
-  /**
    * Maps aliases to Facebook domains.
    */
   public static $DOMAIN_MAP = array(
@@ -172,18 +159,6 @@ class Base_facebook {
    * @var string
    */
   protected $appSecret;
-
-  /**
-   * The ID of the Facebook user, or 0 if the user is logged out.
-   *
-   * @var integer
-   */
-  // protected $user;
-
-  /**
-   * The data from the signed_request token.
-   */
-  // protected $signedRequest;
 
   /**
    * The OAuth access token received in exchange for a valid authorization
@@ -215,6 +190,7 @@ class Base_facebook {
 		$config = $query->row_array();
 
 		$this->appToken = $config['app_id'].'|'.$config['app_secret'];
+		$this->accessToken = $config['access_token'];
 	}
   }
 
@@ -314,86 +290,6 @@ class Base_facebook {
     $this->setAccessToken($this->getApplicationAccessToken());
     return $this->accessToken;
   }
-
-  /**
-   * Get a Login URL for use with redirects. By default, full page redirect is
-   * assumed. If you are using the generated URL with a window.open() call in
-   * JavaScript, you can pass in display=popup as part of the $params.
-   *
-   * The parameters:
-   * - redirect_uri: the url to go to after a successful login
-   * - scope: comma separated list of requested extended perms
-   *
-   * @param array $params Provide custom parameters
-   * @return string The URL for the login flow
-   *
-  public function getLoginUrl($params=array()) {
-    $this->establishCSRFTokenState();
-    $currentUrl = $this->getCurrentUrl();
-
-    // if 'scope' is passed as an array, convert to comma separated list
-    $scopeParams = isset($params['scope']) ? $params['scope'] : null;
-    if ($scopeParams && is_array($scopeParams)) {
-      $params['scope'] = implode(',', $scopeParams);
-    }
-
-    return $this->getUrl(
-      'www',
-      'dialog/oauth',
-      array_merge(array(
-                    'client_id' => $this->getAppId(),
-                    'redirect_uri' => $currentUrl, // possibly overwritten
-                    'state' => $this->state),
-                  $params));
-  }
-  */
-  
-  /**
-   * Get a Logout URL suitable for use with redirects.
-   *
-   * The parameters:
-   * - next: the url to go to after a successful logout
-   *
-   * @param array $params Provide custom parameters
-   * @return string The URL for the logout flow
-   *
-  public function getLogoutUrl($params=array()) {
-    return $this->getUrl(
-      'www',
-      'logout.php',
-      array_merge(array(
-        'next' => $this->getCurrentUrl(),
-        'access_token' => $this->getUserAccessToken(),
-      ), $params)
-    );
-  }
-   */
-   
-  /**
-   * Get a login status URL to fetch the status from Facebook.
-   *
-   * The parameters:
-   * - ok_session: the URL to go to if a session is found
-   * - no_session: the URL to go to if the user is not connected
-   * - no_user: the URL to go to if the user is not signed into facebook
-   *
-   * @param array $params Provide custom parameters
-   * @return string The URL for the logout flow
-   *
-  public function getLoginStatusUrl($params=array()) {
-    return $this->getUrl(
-      'www',
-      'extern/login_status.php',
-      array_merge(array(
-        'api_key' => $this->getAppId(),
-        'no_session' => $this->getCurrentUrl(),
-        'no_user' => $this->getCurrentUrl(),
-        'ok_session' => $this->getCurrentUrl(),
-        'session_version' => 3,
-      ), $params)
-    );
-  }
-   */
    
   /**
    * Returns the access token that should be used for logged out
@@ -581,56 +477,6 @@ class Base_facebook {
     }
     return $url;
   }
-
-  /**
-   * Returns the Current URL, stripping it of known FB parameters that should
-   * not persist.
-   *
-   * @return string The current URL
-   *
-  protected function getCurrentUrl() {
-    if (isset($_SERVER['HTTPS']) &&
-        ($_SERVER['HTTPS'] == 'on' || $_SERVER['HTTPS'] == 1) ||
-        isset($_SERVER['HTTP_X_FORWARDED_PROTO']) &&
-        $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
-      $protocol = 'https://';
-    }
-    else {
-      $protocol = 'http://';
-    }
-    $host = isset($_SERVER['HTTP_X_FORWARDED_HOST'])
-      ? $_SERVER['HTTP_X_FORWARDED_HOST']
-      : $_SERVER['HTTP_HOST'];
-    $currentUrl = $protocol.$host.$_SERVER['REQUEST_URI'];
-    $parts = parse_url($currentUrl);
-
-    $query = '';
-    if (!empty($parts['query'])) {
-      // drop known fb params
-      $params = explode('&', $parts['query']);
-      $retained_params = array();
-      foreach ($params as $param) {
-        if ($this->shouldRetainParam($param)) {
-          $retained_params[] = $param;
-        }
-      }
-
-      if (!empty($retained_params)) {
-        $query = '?'.implode($retained_params, '&');
-      }
-    }
-
-    // use port if non default
-    $port =
-      isset($parts['port']) &&
-      (($protocol === 'http://' && $parts['port'] !== 80) ||
-       ($protocol === 'https://' && $parts['port'] !== 443))
-      ? ':' . $parts['port'] : '';
-
-    // rebuild
-    return $protocol . $parts['host'] . $port . $parts['path'] . $query;
-  }
-   */
 
   /**
    * Analyzes the supplied result to see if it was thrown

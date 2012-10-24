@@ -22,7 +22,9 @@ class Fb_link_mcp {
 		$vars['id'] = NULL;
 		$vars['app_id'] = NULL;
 		$vars['app_secret'] = NULL;
-		$vars['form_action'] = $this->_form_url.AMP.'method=add_app';
+		$vars['access_token'] = NULL;
+		$vars['add_app'] = $this->_form_url.AMP.'method=add_app';
+		$vars['add_token'] = $this->_form_url.AMP.'method=add_token';
 		$vars['form_hidden'] = NULL;
 						
 		$query = $this->EE->db->get('fb_link');
@@ -33,6 +35,7 @@ class Fb_link_mcp {
 				$vars['form_hidden'] = array('id' => $app_data['id']);
 				$vars['app_id'] = $app_data['app_id'];
 				$vars['app_secret'] = $app_data['app_secret'];
+				$vars['access_token'] = $app_data['access_token'];
 			}				
 		}
 				
@@ -46,7 +49,7 @@ class Fb_link_mcp {
 		$data = array(
 			'id'			=> $this->EE->input->get_post('id'),
 			'app_id'		=> $this->EE->input->post('app_id'),
-			'app_secret'	=> $this->EE->input->post('app_secret')
+			'app_secret'	=> $this->EE->input->post('app_secret'),
 		);
 
 		if ($data['id'] != NULL) {
@@ -60,9 +63,28 @@ class Fb_link_mcp {
 		$this->EE->functions->redirect($this->_base_url);
 	}
 	
+	function add_token() {
+		// Load necessary helpers and libraries
+		$this->EE->load->helper('form');
+		
+		$data = array(
+			'id'			=> $this->EE->input->get_post('id'),
+			'access_token'	=> $this->EE->input->post('access_token')
+		);
+
+		if ($data['id'] != NULL) {
+			$this->EE->db->update('fb_link', $data);
+		} else {
+			$this->EE->db->insert('fb_link', $data);
+		}
+				
+		$this->EE->session->set_flashdata('message_success', lang('app_updated'));
+		
+		$this->EE->functions->redirect($this->_base_url);
+	}
 }
 
 // END CLASS
 
 /* End of file mcp.fb_link.php */
-/* Location: ./system/expressionengine/third_party/fb_feed/mcp.fb_link.php */
+/* Location: ./system/expressionengine/third_party/fb_link/mcp.fb_link.php */

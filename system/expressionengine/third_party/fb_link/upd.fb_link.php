@@ -2,7 +2,7 @@
 
 class Fb_link_upd {
 
-	var $version = '1.3';
+	var $version = '2.1';
 	
 	function __construct()
 	{
@@ -34,7 +34,8 @@ class Fb_link_upd {
 		$fields = array(
 			'id' => array('type'=>'INT','constrain'=>'2','unsigned'=>TRUE,'auto_increment'=>TRUE),
 			'app_id' => array('type'=>'VARCHAR','constraint'=>'20'),
-			'app_secret' => array('type'=>'VARCHAR','constraint'=>'40')
+			'app_secret' => array('type'=>'VARCHAR','constraint'=>'40'),
+			'access_token' => array('type' => 'VARCHAR','constraint'=>'200')
 			);
 		
 		$this->EE->dbforge->add_field($fields);

@@ -24,27 +24,17 @@ class Fb_link {
 		
 		$params = array(
 			'graph'		=>	$this->EE->TMPL->fetch_param('graph'),
-			'limit'		=>	$this->EE->TMPL->fetch_param('limit'),
-			'fields'	=>	$this->EE->TMPL->fetch_param('fields'),
+			'query'		=>	$this->EE->TMPL->fetch_param('query'),
 		);
 		
-		/*
-		// LEGACY CODE
-		//
-		// This was necessary before a major update to the Graph API.  That made life easier..
-		//
-		if(empty($params['limit'])) {
-			unset($params['limit']);
-		}
-		
-		if(empty($params['fields'])) {
-			unset($params['fields']);
-		}
-		*/
-		
 		// Set the path
-		$path = $params['graph'];
-		unset($params['graph']);
+		if(!empty($params['graph'])) {
+			$path = $params['graph'];
+		}
+		
+		if(!empty($params['query'])) {
+			$path = 'fql?q='.urlencode($params['query']);
+		}
 		
 		try {
 			// We need to set the index for the parser later
@@ -53,7 +43,7 @@ class Fb_link {
 			error_log($e);
 			return $output;
 		}
-				
+
 		// We need to make some "rows" for the EE parser.
 		$rows[] = $this->make_rows($data);
 
@@ -69,33 +59,7 @@ class Fb_link {
 		*/
 		
 		$tag_data = $this->EE->TMPL->tagdata;
-				
-		// Now we parse by row so we can do some formatting for the data and utilize conditionals.
-		/*foreach($rows as $item => $row) {
-				
-			// Format the message HTML is one exists				
-			if(isset($row['message'])) {
-				$row['message'] = auto_link($this->EE->typography->parse_type($row['message'], array('text_format' => 'lite', 'html_format' => 'safe', 'auto_links' => 'y')));
-			}
-			
-			// Make some date conversions to utilize the built-in EE date format= functionality.  In the future this may you pattern matching to be more robust.
-			$row['created_time'] = strtotime($row['created_time']);
-			$row['updated_time'] = strtotime($row['updated_time']);
-					
-			// Let's create a special post_id variable.  This is for building links to specific posts.
-			$id = explode('_', $row['id']);
-			$row['post_id'] = $id[1];
-			
-			// Set our conditionals
-			$cond				=	$row;
-			$cond['likes']		=	(isset($row['likes'])) ? 'TRUE' : 'FALSE';
-			$cond['comments']	=	($row['comments'][0]['count'] > 0) ? 'TRUE' : 'FALSE';
-			
-			$tagdata = $this->EE->functions->prep_conditionals($tag_data, $cond);
-			$output .= $this->EE->TMPL->parse_variables_row($tagdata, $row);
-			
-		}*/
-		
+						
 		$output = $this->EE->TMPL->parse_variables($tag_data, $rows);
 												
 		return $output;
@@ -150,4 +114,4 @@ class Fb_link {
 }
 
 /* End of file mod.fb_link.php */
-/* Location: ./system/expressionengine/third_party/fb_feed/mod.fb_link.php */
+/* Location: ./system/expressionengine/third_party/fb_link/mod.fb_link.php */
