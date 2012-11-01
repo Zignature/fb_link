@@ -81,9 +81,24 @@ class Fb_link_upd {
 	 * @return	bool
 	 */	
 	 
-	function update($current='')
+	function update($current = '')
 	{
-		return FALSE;
+		if ($current == $this->version) {
+			return FALSE;
+		}
+		
+		$this->EE->load->dbforge();
+		
+		if ($current < 2.1) {			
+			$field = array(
+				'access_token' => array('type' => 'VARCHAR','constraint'=>'200')
+			);
+			
+			$this->EE->dbforge->add_column('fb_link', $field);
+		}
+
+		return TRUE;
+
 	}
 	
 }
