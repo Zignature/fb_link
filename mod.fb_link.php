@@ -101,8 +101,9 @@ class Fb_link {
 
 	// Function to handle the formatting of certain fields.
 	public function format($k, $v) {		
-		if($k == 'message') {
-			$v = auto_link($this->EE->typography->parse_type($v, array('text_format' => 'lite', 'html_format' => 'safe', 'auto_links' => 'y')));
+		if(($k == 'message') || ($k == 'story')) {
+			// As of January 2013 'auto_links' is set to no.  The Graph now returns formatted links inside of posts.  If links are causing problems set 'auto_links' to yes and see if that corrects the issue.
+			$v = auto_link($this->EE->typography->parse_type($v, array('text_format' => 'lite', 'html_format' => 'safe', 'auto_links' => 'n')));
 		}
 		
 		if(($k == 'created_time') || ($k == 'updated_time')) {
