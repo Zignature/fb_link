@@ -44,10 +44,10 @@ class Fb_link {
 			error_log($e);
 			return $output;
 		}
-
+				
 		// We need to make some "rows" for the EE parser.
 		$rows[] = $this->make_rows($data);
-		
+				
 		/*
 		//
 		// This may be handy for pagination later but for now it's just filed away.
@@ -90,18 +90,20 @@ class Fb_link {
 				
 			// Is an array so hold up we need some more work.
 			} elseif(is_array($v)){
+			
+				// We need to rename the "row" named data based on it's parent or else the parser gets confused. Here we rename it and merge the array up to eliminate and unnecessary tag.
+				if(isset($v['data']) && !is_numeric(array_shift(array_keys($v['data'])))) {
+					$v[$k.':data'][] = $v['data'];
+					unset($v['data']);
+				} elseif (isset($v['data']) && is_numeric(array_shift(array_keys($v['data'])))) {
+					$v[$k.':data'] = $v['data'];
+					unset ($v['data']);
+				}
 				
 				// If it's not numeric we need to create that.
 				if(!is_numeric($k) && !is_numeric(array_shift(array_keys($v)))) {
 				
-					// We need to rename the "row" named data based on it's parent or else the parser gets confused.
-					if(isset($v['data'])) {
-						$v[$k.':data'] = $v['data'];
-						unset($v['data']);						
-					}
-					
-					// Set the unique key on arrays also if a parent key exists.
-					if($parent != NULL) {
+					if ($parent != NULL) {
 						$var[$parent.':'.$k][0] = $this->make_rows($v, $k);
 					} else {
 						$var[$k][0] = $this->make_rows($v, $k);
