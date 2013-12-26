@@ -8,26 +8,36 @@ class Fb_link_mcp {
 		
 		$this->_base_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link';
 		$this->_form_url = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link';
+		
+		// Check for DB settings then load the Facebook model if they exist
+		$query = ee()->db->get('fb_link');
+		if($query->num_rows() > 0) {
+			$row = $query->row();
+			$config = array(
+				'appId'		=> $row->app_id,
+				'secret'	=> $row->app_secret,
+			);
+			ee()->load->library('facebook', $config);
+		}
 	}
 	
 	function index() {
 	
 		// Load necessary helpers and libraries
-		$this->EE->load->library('table');
-		$this->EE->load->helper('form');
+		ee()->load->library('table');
+		ee()->load->helper('form');
 
 		// Set page title
-		$this->EE->cp->set_variable('cp_page_title', $this->EE->lang->line('cp_title'));
+		ee()->view->cp_page_title = lang('cp_title');
 		
 		$vars['id'] = NULL;
 		$vars['app_id'] = NULL;
 		$vars['app_secret'] = NULL;
 		$vars['access_token'] = NULL;
 		$vars['add_app'] = $this->_form_url.AMP.'method=add_app';
-		$vars['add_token'] = $this->_form_url.AMP.'method=add_token';
 		$vars['form_hidden'] = NULL;
 						
-		$query = $this->EE->db->get('fb_link');
+		$query = ee()->db->get('fb_link');
 		
 		if ($query->num_rows() > 0) {
 			foreach ($query->result_array() as $app_data) {
@@ -38,50 +48,32 @@ class Fb_link_mcp {
 				$vars['access_token'] = $app_data['access_token'];
 			}				
 		}
-				
-		return $this->EE->load->view('index', $vars, TRUE);
+		
+		return ee()->load->view('index', $vars, TRUE);
 	}
-	
+	 	
 	function add_app() {
 		// Load necessary helpers and libraries
-		$this->EE->load->helper('form');
+		ee()->load->helper('form');
 		
 		$data = array(
-			'id'			=> $this->EE->input->get_post('id'),
-			'app_id'		=> $this->EE->input->post('app_id'),
-			'app_secret'	=> $this->EE->input->post('app_secret'),
+			'id'			=> ee()->input->get_post('id'),
+			'app_id'		=> ee()->input->post('app_id'),
+			'app_secret'	=> ee()->input->post('app_secret'),
+            'access_token'  => ee()->input->post('access_token'),
 		);
 
 		if ($data['id'] != NULL) {
-			$this->EE->db->update('fb_link', $data);
+			ee()->db->update('fb_link', $data);
 		} else {
-			$this->EE->db->insert('fb_link', $data);
+			ee()->db->insert('fb_link', $data);
 		}
 				
-		$this->EE->session->set_flashdata('message_success', lang('app_updated'));
+		ee()->session->set_flashdata('message_success', lang('app_updated'));
 		
-		$this->EE->functions->redirect($this->_base_url);
+		ee()->functions->redirect($this->_base_url);
 	}
-	
-	function add_token() {
-		// Load necessary helpers and libraries
-		$this->EE->load->helper('form');
-		
-		$data = array(
-			'id'			=> $this->EE->input->get_post('id'),
-			'access_token'	=> $this->EE->input->post('access_token')
-		);
 
-		if ($data['id'] != NULL) {
-			$this->EE->db->update('fb_link', $data);
-		} else {
-			$this->EE->db->insert('fb_link', $data);
-		}
-				
-		$this->EE->session->set_flashdata('message_success', lang('app_updated'));
-		
-		$this->EE->functions->redirect($this->_base_url);
-	}
 }
 
 // END CLASS

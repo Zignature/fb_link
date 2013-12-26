@@ -2,7 +2,7 @@
 
 class Fb_link_upd {
 
-	var $version = '2.2.1';
+	var $version = '3.0a';
 	
 	function __construct()
 	{
@@ -12,7 +12,7 @@ class Fb_link_upd {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Module Installer
+	 * Module Install
 	 *
 	 * @access	public
 	 * @return	bool
@@ -32,10 +32,10 @@ class Fb_link_upd {
 		$this->EE->db->insert('modules', $mod_data);
 		
 		$fields = array(
-			'id' => array('type'=>'INT','constrain'=>'2','unsigned'=>TRUE,'auto_increment'=>TRUE),
-			'app_id' => array('type'=>'VARCHAR','constraint'=>'20'),
-			'app_secret' => array('type'=>'VARCHAR','constraint'=>'40'),
-			'access_token' => array('type' => 'VARCHAR','constraint'=>'200')
+			'id'			=> array('type'=>'INT','constrain'=>'2','unsigned'=>TRUE,'auto_increment'=>TRUE),
+			'app_id'		=> array('type'=>'VARCHAR','constraint'=>'20'),
+			'app_secret'	=> array('type'=>'VARCHAR','constraint'=>'40'),
+			'access_token'	=> array('type' => 'VARCHAR','constraint'=>'200'),
 			);
 		
 		$this->EE->dbforge->add_field($fields);
@@ -48,7 +48,7 @@ class Fb_link_upd {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Module Uninstaller
+	 * Module Uninstall
 	 *
 	 * @access	public
 	 * @return	bool
@@ -75,7 +75,7 @@ class Fb_link_upd {
 	// --------------------------------------------------------------------
 
 	/**
-	 * Module Updater
+	 * Module Update
 	 *
 	 * @access	public
 	 * @return	bool
@@ -83,13 +83,13 @@ class Fb_link_upd {
 	 
 	function update($current = '')
 	{
-		if ($current == $this->version) {
+		if (version_compare($current, '3.0a', '=')) {
 			return FALSE;
 		}
 		
 		$this->EE->load->dbforge();
 		
-		if ($current < 2.1) {			
+		if (version_compare($current, '2.1', '<')) {			
 			$field = array(
 				'access_token' => array('type' => 'VARCHAR','constraint'=>'200')
 			);
