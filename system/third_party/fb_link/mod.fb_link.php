@@ -47,7 +47,7 @@ class Fb_link {
 		}
 		
 		if(!empty($params['query'])) {
-			$path = 'fql?q='.str_replace(' ', '+', $params['query']);
+			$path = 'fql?q='.urlencode($params['query']);
 		}
 		
 		try {
@@ -55,6 +55,7 @@ class Fb_link {
             $data = ee()->facebook->api($path);
 
 		} catch (FacebookApiException $e) {
+            // Handle error better...
 			error_log($e);
 			return $output;
 		}
