@@ -38,7 +38,7 @@ class Fb_link {
 		$params = array(
 			'graph'		=>	ee()->TMPL->fetch_param('graph'),
 			'query'		=>	ee()->TMPL->fetch_param('query'),
-            'output'    =>  ee()->TMPL->fetch_param('output'),
+            'json'    	=>  ee()->TMPL->fetch_param('json', 'no'),
 		);
 		
 		// Set the path
@@ -60,8 +60,8 @@ class Fb_link {
 			return $output;
 		}
 
-        if($params['output'] == 'json') {
-            return $data;
+        if($params['json'] == 'yes') {
+        	// Output our JSON here...
         }
 
 		// We need to make some "rows" for the EE parser.
