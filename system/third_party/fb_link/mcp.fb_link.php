@@ -5,7 +5,7 @@ class Fb_link_mcp {
 	function __construct()
 	{
 		$this->EE =& get_instance();
-		
+
 		$this->_base_url = BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link';
 		$this->_form_url = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link';
 		
@@ -17,7 +17,6 @@ class Fb_link_mcp {
 				'appId'		=> $row->app_id,
 				'secret'	=> $row->app_secret,
 			);
-			ee()->load->library('facebook', $config);
 		}
 	}
 	
@@ -57,14 +56,16 @@ class Fb_link_mcp {
 		ee()->load->helper('form');
 		
 		$data = array(
-			'id'			=> ee()->input->get_post('id'),
 			'app_id'		=> ee()->input->post('app_id'),
 			'app_secret'	=> ee()->input->post('app_secret'),
             'access_token'  => ee()->input->post('access_token'),
 		);
 
-		if ($data['id'] != NULL) {
-			ee()->db->update('fb_link', $data);
+        $fbid = ee()->db->select('id')->get('fb_link');
+
+		if ($fbid->num_rows() > 0) {
+            $id = $fbid->row_array();
+			ee()->db->update('fb_link', $data, $id);
 		} else {
 			ee()->db->insert('fb_link', $data);
 		}

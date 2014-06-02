@@ -2,7 +2,7 @@
 
 class Fb_link_upd {
 
-	var $version = '3.0a';
+	var $version = '3.0.1a';
 	
 	function __construct()
 	{
