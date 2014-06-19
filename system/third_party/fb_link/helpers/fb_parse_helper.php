@@ -64,10 +64,6 @@ function format($k, $v)
         $v = auto_link(ee()->typography->parse_type($v, array('text_format' => 'lite', 'html_format' => 'safe', 'auto_links' => 'n')));
     }
 
-    if (($k == 'created_time') || ($k == 'updated_time')) {
-        $v = strtotime($v);
-    }
-
     return $v;
 }
 
