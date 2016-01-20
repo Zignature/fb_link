@@ -1,28 +1,29 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed.');
 
-// require_once PATH_THIRD.'fb_link/libraries/facebook.php';
+// include config file
+include_once dirname(__FILE__).'/config.php';
+
+// autoload Facebook
+require __DIR__ . '/vendor/autoload.php';
+use Facebook\Facebook;
 
 class Fb_link {
 
-	var $return_data = '';
-	
-	function __construct() {
-		$this->EE =& get_instance();
 
-        // Check for DB settings then load the Facebook model if they exist
+	function __construct() {
+
+        // Get the DB settings
         $query = ee()->db->get('fb_link');
         if($query->num_rows() > 0) {
             $row = $query->row();
-            $config = array(
-                'appId'		=> $row->app_id,
-                'secret'	=> $row->app_secret,
-                'file_upload'   => false,
-                'allowSignedRequest'    => false,
+            $this->settings = array(
+                'id'            => $row->id,
+                'app_id'		=> $row->app_id,
+                'app_secret'	=> $row->app_secret,
+                'default_token' => $row->default_token,
+                'tokens'        => $row->tokens
             );
-
-            ee()->load->library('facebook', $config);
-            ee()->facebook->setAccessToken($row->access_token);
-       	}
+        }
     }
 	
 	function graph() {
@@ -36,38 +37,38 @@ class Fb_link {
 		$output = '';
 
 		$params = array(
-			'graph'		=>	ee()->TMPL->fetch_param('graph'),
-			'query'		=>	ee()->TMPL->fetch_param('query'),
+            'token'     =>  ee()->TMPL->fetch_param('token', $this->settings['default_token']),
+			'request'	=>	ee()->TMPL->fetch_param('request'),
             'json'    	=>  ee()->TMPL->fetch_param('json', 'no'),
 		);
-		
-		// Set the path
-		if(!empty($params['graph'])) {
-			$path = $params['graph'];
-		}
-		
-		if(!empty($params['query'])) {
-			$path = 'fql?q='.urlencode($params['query']);
-		}
-		
+
+        $fb = new Facebook(array(
+            'app_id' => $this->settings['app_id'],
+            'app_secret' => $this->settings['app_secret'],
+            'default_graph_version' => GRAPH_VERSION
+        ));
+
 		try {
 			// We need to set the index for the parser later
-            $data = ee()->facebook->api($path);
-
-		} catch (FacebookApiException $e) {
-            // Handle error better...
-			error_log($e);
-			return $output;
+            $response = $fb->get($params['request'], $params['token']);
+		} catch (\Facebook\Exceptions\FacebookSDKException $e) {
+            // Log error
+			ee()->load->library('logger');
+            ee()->logger->developer('FB Graph Tag Error: ' . $e->getMessage());
+            // Return empty output
+            return $output;
 		}
 
         if($params['json'] == 'yes') {
-        	// Output our JSON here...
+        	// Output our JSON here
+            $jsonResponse = json_encode($response->getBody());
+            ee()->output->send_ajax_response($jsonResponse);
         }
 
 		// We need to make some "rows" for the EE parser.
-		$rows[] = make_rows($data);
-				
-		/*
+		$rows[] = make_rows($response->getDecodedBody());
+
+        /*
 		//
 		// This may be handy for pagination later but for now it's just filed away.
 		//

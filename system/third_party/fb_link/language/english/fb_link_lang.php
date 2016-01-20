@@ -11,14 +11,18 @@ $lang = array(
 
 // Additional Key => Value pairs go here
 'cp_title'		=>	'Facebook Link',
-'settings'		=>	'Settings',
+'app_settings'	=>	'Facebook App Settings',
 'value'			=>	'Value',
-'set_instructions'	=>	'Enter your App ID and App Secret from your Facebook app below.',
 'app_id'		=>	'App ID',
-'fb_connect'	=>	'Facebook connection instructions.',
 'app_secret'	=>	'App Secret',
+'access_tokens' =>  'Access Tokens',
+'selected'      =>  'Selected',
+'name'          =>  'Name',
+'token'         =>  'Token',
 'app_updated'	=>	'Your app settings were successfully updated.',
-'save'	=>	'Save',
+'save_settings'	=>	'Save Settings',
+'save_tokens'   =>  'Save Token',
+'clear_tokens'  =>  'Clear tokens',
 
 // END
 ''=>''

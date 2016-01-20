@@ -1,15 +1,44 @@
+function ajaxTokens() {
+    var tokens = token_link();
+    $.ajax({
+        url: tokens
+    }).done(function () {
+        location.reload();
+    }).fail(function (response) {
+        $("#fb-authorize").after("<p>An error occurred in the login/authorization process.  Check the console log for the error.</p>");
+        console.log(response);
+    });
+}
+
+function login() {
+    FB.login(function(response) {
+        if (response.authResponse) {
+            console.log('Logged in');
+            // Get token link
+            ajaxTokens();
+        } else {
+            console.log('Login failed');
+            console.log(response);
+        }
+    }, {scope: 'manage_pages,pages_show_list'});
+}
+
 $(document).ready(function() {
 
     // Login should be done client-side
-    $('#fb-token').click(function() {
-        var app_id = $('[name=app_id]').val();
-        var app_secret = $('[name=app_secret]').val();
-
-        $.get('https://graph.facebook.com/oauth/access_token?client_id=' + app_id + '&client_secret=' + app_secret + '&grant_type=client_credentials', function(response) {
-            var res = response.split('=');
-            var data = {};
-            data[res[0]] = [res[1]];
-            $('[name=access_token]').val(res[1]);
+    $("#fb-authorize").click(function() {
+        $(this).attr("disabled", true);
+        FB.getLoginStatus(function(response) {
+            if (response.status === 'connected') {
+                // Logged into your app and Facebook
+                ajaxTokens();
+            } else if (response.status === 'not authorized') {
+                // Logged in but not authorized.
+                login();
+            } else {
+                // Not logged in
+                login();
+            }
         });
     });
 });
