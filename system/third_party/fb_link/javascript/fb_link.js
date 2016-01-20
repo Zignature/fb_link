@@ -5,6 +5,7 @@ function ajaxTokens() {
     }).done(function () {
         location.reload();
     }).fail(function (response) {
+        $("#fb-authorize").attr("disabled", false).text('Get Access Tokens');
         $("#fb-authorize").after("<p>An error occurred in the login/authorization process.  Check the console log for the error.</p>");
         console.log(response);
     });
@@ -27,7 +28,7 @@ $(document).ready(function() {
 
     // Login should be done client-side
     $("#fb-authorize").click(function() {
-        $(this).attr("disabled", true);
+        $(this).attr("disabled", true).text('Fetching tokens');
         FB.getLoginStatus(function(response) {
             if (response.status === 'connected') {
                 // Logged into your app and Facebook
