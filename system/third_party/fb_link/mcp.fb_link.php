@@ -27,10 +27,13 @@ class Fb_link_mcp {
 		}
 	}
 
-    /*
-     * Settings for module
-     * - Users authenticates app - if successful display a "Get Tokens" button - if not display the error (all via Javascript)
-     * - User clicks "Get Tokens" to run the get_tokens methods (which gets both page and app tokens and stores them) and the page refreshes with the tokens displayed in a radio button select form.
+    /**
+     * Module settings
+     *
+     * Users authenticate app- if successful display a "Get Tokens" button - if not display the error (all via Javascript)
+     * User clicks "Get Tokens" to run the get_tokens methods (which gets both page and app tokens and stores them) and the page refreshes with the tokens displayed in a radio button select form.
+     *
+     * @return mixed
      */
 	function index() {
 	
@@ -44,9 +47,9 @@ class Fb_link_mcp {
 		$vars['id'] = NULL;
 		$vars['app_id'] = NULL;
 		$vars['app_secret'] = NULL;
-		$vars['add_app'] = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link'.AMP.'method=add_app';
-        $vars['add_token'] = 'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link'.AMP.'method=add_token';
-        $vars['clear_token'] = cp_url('addons_modules/show_module_cp', array('module'=>'fb_link','method'=>'clear_tokens'));
+		$vars['add_app'] = ee('CP/URL', 'fb_link/add_app');
+        $vars['add_token'] = ee('CP/URL', 'fb_link/add_token');
+        $vars['clear_token'] = ee('CP/URL', 'fb_link/clear_tokens');
 		$vars['form_hidden'] = NULL;
 
 		if (!empty($this->settings)) {
@@ -73,7 +76,8 @@ class Fb_link_mcp {
 		return ee()->load->view('index', $vars, TRUE);
 	}
 
-    /*
+
+    /**
      * Save basic app settings
      *
      * Saves the app id and secret from Facebook. We do this first since
@@ -105,13 +109,15 @@ class Fb_link_mcp {
 				
 		ee()->session->set_flashdata('message_success', lang('app_updated'));
 		
-		ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link');
+		ee()->functions->redirect(ee('CP/URL', 'fb_link'));
 	}
 
-    /*
+
+    /**
      * Save app token
      *
      * The default token is selected from the available list.
+     *
      */
     function add_token() {
         // Load necessary helpers and libraries
@@ -124,12 +130,15 @@ class Fb_link_mcp {
 
         ee()->session->set_flashdata('message_success', lang('app_updated'));
 
-        ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link');
+        ee()->functions->redirect(ee('CP/URL', 'fb_link'));
     }
 
-    /*
-     * Get both app and page tokens and store them in the DB for refernce.
+
+    /**
+     * Get both app and page tokens and store them in the DB for reference.
      * Old tokens are always replaced when this is called.
+     *
+     * @throws Exception
      */
     function get_tokens() {
 
@@ -209,7 +218,8 @@ class Fb_link_mcp {
         ee()->db->update('fb_link', $data, array('id' => $this->settings['id']));
     }
 
-    /*
+    
+    /**
      * Clear all tokens
      *
      * Delete tokens from the DB
@@ -221,7 +231,7 @@ class Fb_link_mcp {
         );
         ee()->db->update('fb_link', $data, array('id' => $this->settings['id']));
 
-        ee()->functions->redirect(BASE.AMP.'C=addons_modules'.AMP.'M=show_module_cp'.AMP.'module=fb_link');
+        ee()->functions->redirect(ee('CP/URL', 'fb_link'));
 
     }
 

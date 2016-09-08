@@ -25,7 +25,13 @@ class Fb_link {
             );
         }
     }
-	
+    
+
+    /**
+     * Primary function
+     *
+     * @return string
+     */
 	function graph() {
 
 		// Load Typography Class to parse data
@@ -39,7 +45,10 @@ class Fb_link {
 		$params = array(
             'token'     =>  ee()->TMPL->fetch_param('token', $this->settings['default_token']),
 			'request'	=>	ee()->TMPL->fetch_param('request'),
-            'json'    	=>  ee()->TMPL->fetch_param('json', 'no'),
+            'orderby'   =>  ee()->TMPL->fetch_param('orderby'),
+            'sort'      =>  ee()->TMPL->fetch_param('sort', 'asc'),
+            'limit'     =>  ee()->TMPL->fetch_param('limit'),
+            'json'    	=>  ee()->TMPL->fetch_param('json', 'no')
 		);
 
         $fb = new Facebook(array(
@@ -59,14 +68,33 @@ class Fb_link {
             return $output;
 		}
 
-        if($params['json'] == 'yes') {
-        	// Output our JSON here
-            $jsonResponse = json_encode($response->getBody());
-            ee()->output->send_ajax_response($jsonResponse);
-        }
-
 		// We need to make some "rows" for the EE parser.
 		$rows[] = make_rows($response->getDecodedBody());
+
+        // And lastly lets sort by our parameters
+        if (!empty($params['orderby'])) {
+            foreach ($rows as $key => $row) {
+                $sort_field[$key] = $row[$params['orderby']];
+
+            }
+            if ($params['sort'] != 'asc') {
+                $sort_direction = 'SORT_ASC';
+            } else {
+                $sort_direction = 'SORT_DESC';
+            }
+
+            array_multisort($sort_field, $sort_direction, $rows);
+        }
+
+        if (!empty($params['limit'])) {
+            array_slice($rows[0], 0, $params['limit']);
+        }
+
+        if($params['json'] == 'yes') {
+            // Output our JSON here
+            $jsonResponse = json_encode($rows[0]);
+            ee()->output->send_ajax_response($jsonResponse);
+        }
 
         /*
 		//

@@ -2,14 +2,13 @@
 
 class Fb_link_upd {
 
-	var $version = '3.5a';
+	var $version = '4.0';
 	
 	function __construct()
 	{
 		//$this->EE =& get_instance();
 	}
 	
-	// --------------------------------------------------------------------
 
 	/**
 	 * Module Install
@@ -48,7 +47,6 @@ class Fb_link_upd {
 		return TRUE;
 	}
 	
-	// --------------------------------------------------------------------
 
 	/**
 	 * Module Uninstall
@@ -75,7 +73,6 @@ class Fb_link_upd {
 		return TRUE;
 	}
 	
-	// --------------------------------------------------------------------
 
 	/**
 	 * Module Update
