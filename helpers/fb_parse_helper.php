@@ -37,16 +37,16 @@ function make_rows($array, $parent = NULL)
         } elseif (is_array($v)) {
 
             // We need to rename the "row" named data based on it's parent or else the parser gets confused. Here we rename it and merge the array up to eliminate any unnecessary tag.
-            if (isset($v['data']) && !is_numeric(array_shift(array_keys($v['data'])))) {
+            if (isset($v['data']) && !is_numeric(current(array_keys($v['data'])))) {
                 $v[$k . ':data'][] = $v['data'];
                 unset($v['data']);
-            } elseif (isset($v['data']) && is_numeric(array_shift(array_keys($v['data'])))) {
+            } elseif (isset($v['data']) && is_numeric(current(array_keys($v['data'])))) {
                 $v[$k . ':data'] = $v['data'];
                 unset ($v['data']);
             }
 
             // If it's not numeric we need to create that.
-            if (!is_numeric($k) && !is_numeric(array_shift(array_keys($v)))) {
+            if (!is_numeric($k) && !is_numeric(current(array_keys($v)))) {
 
                 if ($parent != NULL) {
                     $var[$parent . ':' . $k][0] = make_rows($v, $k);
