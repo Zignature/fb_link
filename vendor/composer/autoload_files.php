@@ -6,5 +6,5 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
-    '7e702cccdb9dd904f2ccf22e5f37abae' => $vendorDir . '/facebook/php-sdk-v4/src/Facebook/polyfills.php',
+    '7e702cccdb9dd904f2ccf22e5f37abae' => $vendorDir . '/facebook/php-graph-sdk-v5/src/Facebook/polyfills.php',
 );
