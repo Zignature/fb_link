@@ -297,4 +297,4 @@ class Fb_link_mcp {
 // END CLASS
 
 /* End of file mcp.fb_link.php */
-/* Location: ./system/expressionengine/third_party/fb_link/mcp.fb_link.php */
+/* Location: ./system/user/addons/fb_link/mcp.fb_link.php */

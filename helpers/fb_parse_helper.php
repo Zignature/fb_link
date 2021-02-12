@@ -81,4 +81,4 @@ function format($k, $v)
 }
 
 /* End of file */
-/* Location: ./system/expressionengine/third_party/fb_link/helpers/fb_parse_helper.php */
+/* Location: ./system/user/addons/fb_link/helpers/fb_parse_helper.php */

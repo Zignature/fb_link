@@ -107,4 +107,4 @@ class Fb_link {
 }
 
 /* End of file mod.fb_link.php */
-/* Location: ./system/expressionengine/third_party/fb_link/mod.fb_link.php */
+/* Location: ./system/user/addons/fb_link/mod.fb_link.php */
