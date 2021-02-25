@@ -63,7 +63,12 @@ class Fb_link_upd {
 		$query = ee()->db->get_where('modules', array('module_name' => 'Fb_link'));
 
 		ee()->db->where('module_id', $query->row('module_id'));
-		ee()->db->delete('module_member_groups');
+		
+		if (version_compare($current, '4.1.3', '<')) {
+			ee()->db->delete('module_member_groups');
+		} else {
+			ee()->db->delete('module_member_roles');
+		}
 
 		ee()->db->where('module_name', 'Fb_link');
         ee()->db->delete('modules');

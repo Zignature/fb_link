@@ -12,7 +12,7 @@
 if ( ! defined('FACEBOOK_LINK_NAME'))
 {
     define('FACEBOOK_LINK_NAME', 'Facebook Link');
-    define('GRAPH_VERSION', 'v9.0');
+    define('GRAPH_VERSION', 'v10.0');
 }
 
 /* End of file config.php */
