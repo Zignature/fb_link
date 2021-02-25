@@ -2,7 +2,7 @@
 
 class Fb_link_upd {
 
-	var $version = '4.1.1';
+	var $version = '4.1.3';
 	
 	function __construct()
 	{
@@ -64,7 +64,7 @@ class Fb_link_upd {
 
 		ee()->db->where('module_id', $query->row('module_id'));
 		
-		if (version_compare($current, '4.1.3', '<')) {
+		if (version_compare(APP_VER, '6.0.0', '<')) {
 			ee()->db->delete('module_member_groups');
 		} else {
 			ee()->db->delete('module_member_roles');
